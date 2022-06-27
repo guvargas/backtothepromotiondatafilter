@@ -19,6 +19,10 @@ Route::get('/', function () {
     return view('pages.home');
 });
 
+Route::get('/personagens', function () {
+    return view('pages.personagens');
+});
+
 Route::get('/partida/{id}', function ($id) {
     return view('pages.match', ['id' => $id]);
 })->name('match');
@@ -31,18 +35,18 @@ Route::middleware('auth')->group(function () {
         return view('pages.admin.home');
     })->name('admin');
 
-    
+
     Route::get('/umpires', function () {
         return view('pages.admin.addUmpire');
     })->name('addUmpire');
 
-    
+
     Route::get('/match', function () {
         return view('pages.admin.refereeMatch');
     })->name('matchControl');
 
-  
-  
+
+
     Route::get('/importMatches', function () {
         return view('pages.admin.importMatches');
     })->name('importMatches');
