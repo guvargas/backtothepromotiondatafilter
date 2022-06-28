@@ -25,19 +25,27 @@
 
 @section('script')
 <script src='/js/personagens.js'></script>
+<script src="/js/dados_alunos.js"></script>
 <script>
+   //let mix = require('laravel-mix');
+ //   require('dotenv').config();
+
     function readJsonFile() {
-        let IDS_Alunos_VR = [2, 6, 18, 38, 37, 36, 27, 29, 1, 35, 13];
+        //galera do pc
+        let IDS_PESQUISA =GALERA_DO_PC_UM;
+
+        //galera
+        //let IDS_PESQUISA = [2, 6, 18, 38, 37, 36, 27, 29, 1, 35, 13];
 
         let dados = JSON.parse(personagensData);
         let dadosFiltrados = [];
         let idatual = ""
         let count = 0;
-        let personagens = ["PersonagemRecepcionista", "Diretora","TeacherContainer", "PessoaArquibancada", "Arquibancada dois ", "Arbitro"];
+        let personagens = ["PersonagemRecepcionista", "Diretora", "TeacherContainer", "PessoaArquibancada", "Arquibancada dois ", "Arbitro"];
         const mapaDeGente = new Map();
         const mapaDeFluxos = new Map();
         dados.forEach(element => {
-            IDS_Alunos_VR.forEach(id => {
+            IDS_PESQUISA.forEach(id => {
 
                 //se o id tiver dentre os alunso que a gente ta procurando
                 if (element.id_aluno == id) {
@@ -47,9 +55,9 @@
                     var jsDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2].substr(0, 2), dateParts[3].substr(0, 2), dateParts[3].substr(3, 2), dateParts[3].substr(6, 2)));
 
                     //se o dia for igual ao dia que a gente quer saber dentre o horario que a gente quer ver
-                    if (jsDate.getDate() == 18 && jsDate.getHours() >= 19 && jsDate.getHours() <= 21) {
+                    if ( jsDate.getDate() == 18 && jsDate.getHours() >= 19 && jsDate.getHours() <= 21) {
                         var arrayDesteAluno = [];
-
+                        element.horario=jsDate;
                         //se o mapa ja tiver o id do aluno, pegar o array dele
                         if (mapaDeGente.has(element.id_aluno)) {
                             arrayDesteAluno = mapaDeGente.get(element.id_aluno);
@@ -60,7 +68,7 @@
                             var jahExiste = false;
                             arrayDesteAluno.forEach(dadosDeCadaAluno => {
                                 if (dadosDeCadaAluno.objeto == element.objeto) {
-                                  //  jahExiste = true;
+                                    //  jahExiste = true;
                                 }
                             });
                             if (!jahExiste) {
@@ -81,7 +89,7 @@
                         //         ];
                         //     }
                         // });
-                       // count++;
+                        // count++;
                     }
                 }
             });
