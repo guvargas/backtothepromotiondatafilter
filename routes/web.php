@@ -19,8 +19,16 @@ Route::get('/', function () {
     return view('pages.home');
 });
 
+Route::get('/falas_salvas', function () {
+    return view('pages.falas_salvas');
+});
+
 Route::get('/personagens', function () {
     return view('pages.personagens');
+});
+
+Route::get('/escolhas_minigame', function () {
+    return view('pages.escolhas_minigame');
 });
 
 Route::get('/partida/{id}', function ($id) {

@@ -1,6 +1,6 @@
 @extends('layouts.page')
 @section('title', 'Bem-vindo')
-@section('description', 'Aqui vamos ler os dados do caminho feito pelo jogador sobre o jogo backtothepromotion')
+@section('description', 'Aqui vamos ler os dados sobre o jogo backtothepromotion')
 
 @section('content')
 
@@ -9,7 +9,7 @@
         <center>
             <div class="col">
                 <div class="jumbotron">
-                    <h1>Aqui vamos ler os dados do caminho feito pelo jogador sobre o jogo backtothepromotion</h1>
+                    <h1>Aqui vamos ler os dados do jogo</h1>
                     <div onclick="dale()" class="btn btn-primary mb-3">Fazer Pesquisa</div>
                 </div>
                 <p id="Resultado"></p>
@@ -23,8 +23,9 @@
 
 @endsection
 
+
 @section('script')
-<script src='/js/personagens.js'></script>
+<script src='/js/dados_falas_salvas.js'></script>
 <script src="/js/dados_alunos.js"></script>
 <script>
     //let mix = require('laravel-mix');
@@ -32,7 +33,7 @@
 
     function readJsonFile() {
         //galera do pc
-            let IDS_PESQUISA = GALERA_DO_PC_UM;
+        let IDS_PESQUISA = GALERA_DO_PC_UM;
 
         let dia = DIA_WIN;
         let mes = MES_WIN;
@@ -42,11 +43,10 @@
         //galera
         //let IDS_PESQUISA = [2, 6, 18, 38, 37, 36, 27, 29, 1, 35, 13];
 
-        let dados = JSON.parse(personagensData);
+        let dados = JSON.parse(FALAS_SALVAS);
         let dadosFiltrados = [];
         let idatual = ""
         let count = 0;
-        let personagens = ["PersonagemRecepcionista", "Diretora", "TeacherContainer", "PessoaArquibancada", "Arquibancada dois ", "Arbitro"];
         const mapaDeGente = new Map();
         const mapaDeFluxos = new Map();
         dados.forEach(element => {
@@ -60,49 +60,33 @@
                     var jsDate = new Date(Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2].substr(0, 2), dateParts[3].substr(0, 2), dateParts[3].substr(3, 2), dateParts[3].substr(6, 2)));
 
                     //se o dia for igual ao dia que a gente quer saber dentre o horario que a gente quer ver
-                     if (jsDate.getDate() == dia && jsDate.getHours() >= hora_min && jsDate.getHours() <= hora_max) {
-                    var arrayDesteAluno = [];
-                    element.horario = jsDate;
-                    //se o mapa ja tiver o id do aluno, pegar o array dele
-                    if (mapaDeGente.has(element.id_aluno)) {
-                        arrayDesteAluno = mapaDeGente.get(element.id_aluno);
-                    }
-
-                    //adicionar o objeto clicado no array do aluno
-                    if (personagens.includes(element.objeto)) {
-                        var jahExiste = false;
-                        arrayDesteAluno.forEach(dadosDeCadaAluno => {
-                            if (dadosDeCadaAluno.objeto == element.objeto) {
-                                jahExiste =true;
-                            }
-                        });
-                        if (!jahExiste) {
-                            arrayDesteAluno.push(element);
+                    if (jsDate.getDate() == dia && jsDate.getHours() >= hora_min && jsDate.getHours() <= hora_max) {
+                        var arrayDesteAluno = [];
+                        element.horario = jsDate;
+                        //se o mapa ja tiver o id do aluno, pegar o array dele
+                        if (mapaDeGente.has(element.id_aluno)) {
+                            arrayDesteAluno = mapaDeGente.get(element.id_aluno);
                         }
+                        arrayDesteAluno.push(element);
+                      
+                        mapaDeGente.set(element.id_aluno, arrayDesteAluno);
                     }
-                    mapaDeGente.set(element.id_aluno, arrayDesteAluno);
-                     }
                 }
             });
         });
-        mapaDeGente.forEach(element => {
-            let a = "";
-            var first = true;
-            element.forEach(dadosDeCadaAluno => {
-                if (first) {
-                    first = false;
-                    a += dadosDeCadaAluno.id_aluno + " = ";
-                }
-                a += dadosDeCadaAluno.objeto;
-
-                //if element is the last one
-                if (element.indexOf(dadosDeCadaAluno) == element.length - 1) {
-                    a += "\n";
-                } else {
-                    a += " -> ";
-                }
-
-            })
+        //SOH CERTOS
+        mapaDeGente.forEach((value, key) => {
+            var a = "ID: " + key + "\n";
+            a+= "----- CERTOS -----\n";
+            value.forEach(element => {
+                if (element.categoria != "nao_categoria")
+                    a += " " + element.categoria + " " + element.identificador_original + "\n";
+            });
+            a+= "----- ERRADOS -----\n";
+            value.forEach(element => {
+                if (element.categoria == "nao_categoria")
+                    a += " " + element.categoria + " " + element.identificador_original + "\n";
+            });
             console.log(a);
         });
     }
@@ -111,6 +95,7 @@
     readJsonFile();
 </script>
 @endsection
+
 
 
 @section('style')
